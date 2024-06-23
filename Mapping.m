@@ -22,6 +22,9 @@ elseif Q == 2
 elseif Q == 3
     Table = Table8PSK;
     DecadeSeq = ReshapeSeq(: , 1) + ReshapeSeq(: , 2)*2 + ReshapeSeq(: , 3)*4; 
+elseif Q == 4 % Ö§³Ö16PSK
+    Table = Table16PSK;
+    DecadeSeq = ReshapeSeq(:, 1) + ReshapeSeq(:, 2)*2 + ReshapeSeq(:, 3)*4 + ReshapeSeq(:, 4)*8;
 else
     Table = Table16QAM;
     DecadeSeq = ReshapeSeq(: , 1) + ReshapeSeq(: , 2)*2 + ReshapeSeq(: , 3)*4 + ReshapeSeq(: , 4)*8; 

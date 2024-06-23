@@ -51,8 +51,8 @@ buffer_state = 50; % 示例缓冲状态
 arrival_rate = 10; % 示例数据到达率
 max_cross_time = 100; % 最大交叉变异次数
 A_s = 10; % 示例数据传输需求
-% 设置 Python 环境
-% pyversion('E:\Anaconda\Data\envs\myenv\python.exe');
+% 第一次打开MATLAB需设置 Python 环境
+pyversion('E:\Anaconda\Data\envs\myenv\python.exe');
 % 确保MATLAB找到Python路径
 if count(py.sys.path, '') == 0
     insert(py.sys.path, int32(0), '');
@@ -87,10 +87,10 @@ for num_point = 1:length(best_modulation_schemes)
             Mod = 2;
         case 'QPSK'
             Mod = 4;
-        case '16QAM'
+        case '8PSK'
+            Mod = 8;
+        case '16PSK'
             Mod = 16;
-        case '64QAM'
-            Mod = 64;
         otherwise
             error('Unknown modulation scheme');
     end
@@ -159,7 +159,7 @@ for num_point = 1:length(best_modulation_schemes)
     signal_rec_origin_information = signal_send(length_measure+length_GI+1 : length_measure+length_GI+length_BS);
     %% 信道均衡
     Need_len =  length(signal_rec_dc_information);
-    % signal_rec_dc_information = LTE_LMS_fun1(25,0.05,Need_len/2,Need_len/2,signal_rec_dc_information,signal_rec_origin_information);
+%     signal_rec_dc_information = LTE_LMS_fun1(25,0.05,Need_len/2,Need_len/2,signal_rec_dc_information,signal_rec_origin_information);
     %% 相干解调--IQ解调+下载波
     [symbol_demodulate_nodc] = IQdemodulate(signal_rec_nodc_information, fs, length_BS, f0, PulseShape, N_up);
     [symbol_demodulate_dc] = IQdemodulate(signal_rec_dc_information, fs, length_BS, f0, PulseShape, N_up);
@@ -197,4 +197,6 @@ for num_point = 1:length(best_modulation_schemes)
     title('未进行多普勒补偿且未进行信道均衡前')
     scatterplot(symbol_demodulate_dc);
     title('采用多普勒补偿和信道均衡后')
+    % 重置变量以避免干扰
+    clearvars -except best_modulation_schemes N_bit N_up f0 fs PulseShape B fl b1 Rb random_bits bit_generate tre1 interleaved_data rows cols
 end

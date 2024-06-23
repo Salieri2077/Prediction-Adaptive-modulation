@@ -21,6 +21,6 @@ function [pass_by] = CIRAdd(signal_send,fs,num_point)
     
     pass_by = pass_by(1:length(signal_send)); % 裁剪到和原信号同样的长度
     s_t = (1:length(signal_send))*1/fs;
-    figure;
-    plot(s_t,pass_by);
+%     figure;
+%     plot(s_t,pass_by);
 end
