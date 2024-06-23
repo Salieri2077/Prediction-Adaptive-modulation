@@ -1,8 +1,8 @@
-function [signal_add_dopper] = Pass_Channel(fs,m,b1,length_measure,length_GI,length_BS,SNR,Rb,signal_send)
+function [signal_add_dopper] = Pass_Channel(fs,m,b1,length_measure,length_GI,length_BS,SNR,Rb,signal_send,num_point)
 %     signal_add_noise = BandNoiseAdd(signal_send, SNR, b1 ,length_measure+length_GI, length_measure+length_GI+length_BS);
 %     signal_add_noise=signal_send;
 %     signal_add_noise = FadingNoiseAdd(signal_send,SNR,fs,Rb);
-    signal_add_noise = CIRAdd(signal_send,fs);
+    signal_add_noise = CIRAdd(signal_send,fs,num_point);
     
     %% 加多普勒
     % 多普勒估计精度

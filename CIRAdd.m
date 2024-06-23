@@ -1,4 +1,4 @@
-function [pass_by] = CIRAdd(signal_send,fs)
+function [pass_by] = CIRAdd(signal_send,fs,num_point)
 %% 通过设计的信道模型--Watermark
     % 时变信道冲激响应
 %     data = load('BCH1.mat');
@@ -14,7 +14,8 @@ function [pass_by] = CIRAdd(signal_send,fs)
     % pass_one = conv2(signal_send, channel_data, 'full');
     % pass_by = sum(pass_one); % 所有信道进行求和
     
-    % 通过一条信道 
+    % 通过一条信道 预测的24个点的信道
+    channel_data = channel_data(num_point : num_point+24);
     pass_one = conv2(signal_send, abs(channel_data(1,:)));
     pass_by = pass_one;
     

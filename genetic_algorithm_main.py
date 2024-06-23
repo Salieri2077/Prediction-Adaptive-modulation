@@ -33,13 +33,13 @@ def moving_average(data, window_size):
 
 # 调制编码模式和信道状态对能量开销和数据传输率的影响函数
 def energy_consumption(modulation, channel_state):
-    energy_table = {'BPSK': 1, 'QPSK': 2, '16QAM': 3, '64QAM': 4}
+    energy_table = {'BPSK': 1, 'QPSK': 2, '8PSK': 3, '16PSK': 4}
     min_channel_state = 1e-2  # 设置一个最小值阈值，避免 channel_state 为 0
     effective_channel_state = max(channel_state, min_channel_state)
     return energy_table[modulation] / effective_channel_state
 
 def data_rate(modulation, channel_state):
-    rate_table = {'BPSK': 1, 'QPSK': 2, '16QAM': 4, '64QAM': 6}
+    rate_table = {'BPSK': 1, 'QPSK': 2, '8PSK': 3, '16PSK': 4}
     return rate_table[modulation] * channel_state
 
 # 定义误包率函数
@@ -47,8 +47,8 @@ def packet_error_rate(modulation, snr):
     params = {
         'BPSK': (1, 1.0, 0.5),
         'QPSK': (1, 0.5, 0.25),
-        '16QAM': (1, 0.1, 0.1),
-        '64QAM': (1, 0.05, 0.05)
+        '8PSK': (1, 0.2, 0.2),
+        '16PSK': (1, 0.1, 0.1)
     }
     a_m, b_m, gamma_pm = params[modulation]
     if snr < gamma_pm:
@@ -82,7 +82,7 @@ def crossover(parent1, parent2):
 
 # 变异操作
 def mutate(chromosome, mutation_rate=0.01):
-    modulation_schemes = ['BPSK', 'QPSK', '16QAM', '64QAM']
+    modulation_schemes = ['BPSK', 'QPSK', '8PSK', '16PSK']
     for i in range(len(chromosome)):
         if np.random.rand() < mutation_rate:
             chromosome[i] = np.random.choice(modulation_schemes)
@@ -90,7 +90,7 @@ def mutate(chromosome, mutation_rate=0.01):
 
 # 主算法
 def genetic_algorithm(channel_states, snrs, buffer_state, arrival_rate, max_cross_time, A_s, population_size=50, K=25):
-    modulation_schemes = ['BPSK', 'QPSK', '16QAM', '64QAM']
+    modulation_schemes = ['BPSK', 'QPSK', '8PSK', '16PSK']
     num_time_slots = len(channel_states)
     population = [np.random.choice(modulation_schemes, num_time_slots).tolist() for _ in range(population_size)]
     
@@ -112,7 +112,7 @@ def genetic_algorithm(channel_states, snrs, buffer_state, arrival_rate, max_cros
     return best_chromosome
 
 # 封装的主函数
-def genetic_algorithm_main(file_name, snrs,buffer_state, arrival_rate, max_cross_time, A_s):
+def genetic_algorithm_main(file_name, snrs, buffer_state, arrival_rate, max_cross_time, A_s):
     trues, preds = load_data(file_name)
     origin_data, channel_states = generate_channel_state(trues, preds, 'Informer-24')
     
@@ -145,6 +145,6 @@ if __name__ == "__main__":
     arrival_rate = 10  # 数据到达率（示例值）
     max_cross_time = 100  # 设定的交叉变异轮数
     A_s = 10  # 示例数据传输需求，可以根据实际情况调整
-    snrs = np.ones(2136) * 5  # 规定相同的信噪比-2136是len(channel_states)
-    best_modulation_schemes = genetic_algorithm_main(file_name,snrs ,buffer_state, arrival_rate, max_cross_time, A_s)
+    snrs = np.ones(2136) * 5  # 规定相同的信噪比 - 2136是len(channel_states)
+    best_modulation_schemes = genetic_algorithm_main(file_name, snrs, buffer_state, arrival_rate, max_cross_time, A_s)
     print("最佳调制和编码模式:", best_modulation_schemes)
